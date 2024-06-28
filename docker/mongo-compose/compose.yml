@@ -1,0 +1,41 @@
+version: 2.28.1 # Obsolete
+name: mongo # (Top level element) Project Name
+services:
+  mongo:
+    image: mongo:8.0.0-rc9-jammy
+    container_name: mongo
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=pass
+    networks: 
+      - mongo-network
+    volumes:
+      - mongoVol2:/data/db
+  mongo-express:
+    image: mongo-express:1.0.2-20-alpine3.19
+    #container_name: mongo-express
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_SERVER: mongo # refers to service name line 6
+      #ME_CONFIG_MONGODB_URL: mongodb://admin:pass@mongo:27017/
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    networks: 
+      - mongo-network
+    #env_file if needed
+    #command: "echo $ME_CONFIG_MONGODB_SERVER"
+networks:
+  mongo-network:
+    name: mymongoNetwork
+    driver: bridge
+# FROM mongo:8.0.0-rc9-jammy AS mongo
+# RUN docker network create my-network
+# FROM mongo-express:1.0.2-20-alpine3.19 AS mongo-express
+
+volumes:
+  mongoVol2:
+#    external: "true" #This one means that it is created out of the compose file
+    name: mongoVol2
