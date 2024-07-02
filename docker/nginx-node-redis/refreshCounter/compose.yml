@@ -1,0 +1,49 @@
+name: refresh_counter # (Top level element) Project Name
+services:
+  redis:
+    image: redis:7.4-rc1
+    container_name: redis
+    #command: --save 60 1 -I 127.0.0.1 --daemonize yes
+    hostname: redis
+    #ports:
+    #  - "6379:6379"
+    networks: 
+      - refresh_counter
+    volumes:
+      - refresh_counter:/data
+  node:
+    build: ../nodeRedis
+    image: node_redis:0
+    container_name: node_redis
+    depends_on:
+      - redis
+    networks: 
+      - refresh_counter
+  # node:
+  #   image: node_redis:0
+  #   container_name: node
+  #   depends_on:
+  #     - redis
+  #   networks: 
+  #     - refresh_counter
+  nginx:
+    build: ../nginx_node
+    image: nginx_node:0
+    container_name: nginx
+    ports:
+      - "8080:80"
+    depends_on:
+      - node
+    networks:
+      - refresh_counter
+
+networks:
+  refresh_counter:
+    name: refresh_counter
+    driver: bridge
+
+volumes:
+  refresh_counter:
+    name: redis
+#github.com/docker/compo
+#zackferrofields
