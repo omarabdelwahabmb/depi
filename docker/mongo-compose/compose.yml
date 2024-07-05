@@ -1,4 +1,4 @@
-version: 2.28.1 # Obsolete
+version: 2.28.1 # Obsolete 
 name: mongo # (Top level element) Project Name
 services:
   mongo:
