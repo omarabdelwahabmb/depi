@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('check mongo') {
+            steps {
+                node ('ubuntu') {
+                    echo sh (returnStdout: true, script: "docker ps")
+                }
+            }
+        }
+        stage('compose up') {
+            steps {
+                node ('ubuntu') {
+                    sh ("echo Hello World");
+                    dir ("/home/omar/Eng/Courses/DEPI/Technical/Lec5/depi/docker/mongo-compose") {
+                        sh ("docker ps")
+                        sh ("docker compose up -d")
+                    }
+                }
+            }
+        }
+    }
+}

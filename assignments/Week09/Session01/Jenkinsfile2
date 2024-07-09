@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Hello') {
+            steps {
+                node ('ubuntu') {
+                    sh ("echo Hello World");
+                    dir ("/home/omar/Eng/Courses/DEPI/Technical/Lec5/depi/docker/mongo-compose") {
+                        script {
+                            if (sh (returnStatus: true, script: "docker ps | grep 'mongo' > /dev/null")  == 0) {
+                                echo "mongo is already running!"
+                            }
+                            else {
+                                sh ("docker compose up -d")
+                                echo "Composed up successfully!"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
